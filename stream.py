@@ -1,10 +1,11 @@
 import joblib
 import streamlit as st
-import numpy as np
 
-# Load the trained model
-file_name = "finalized_model2.sav"
-loaded_model = joblib.load(file_name)
+# Load the trained model and vectorizer
+model_file_name = "finalized_model2.sav"
+vectorizer_file_name = "vectorizer.sav"
+loaded_model = joblib.load(model_file_name)
+loaded_vectorizer = joblib.load(vectorizer_file_name)
 
 # Streamlit app title
 st.title("Stress Analysis")
@@ -26,12 +27,11 @@ user_text = st.text_input("Text", key="user_text")
 # Access the value and handle prediction
 if user_text:
     try:
-        # Preprocess the input text if necessary
-        # For example, you might need to vectorize the text if your model expects it
-        # processed_text = preprocess_text(user_text)  # Add this if you have a preprocessing step
+        # Preprocess the input text
+        processed_text = loaded_vectorizer.transform([user_text])  # Vectorize the input text
 
         # Predict the result
-        result = loaded_model.predict([user_text])  # Use processed_text if preprocessing is needed
+        result = loaded_model.predict(processed_text)  # Make prediction with the vectorized text
 
         # Display the result
         st.write(f"Prediction: {result[0]}")
